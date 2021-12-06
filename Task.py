@@ -95,4 +95,8 @@ class Task:
         """
         return "Task {} has deadline {}, duration {}, and max benefit {}".format(self.get_task_id(), self.get_deadline(), self.get_duration(), self.get_max_benefit())
 
+    def get_Profit(self, time: int) -> int:
+        timeOfDay = time + self.get_duration()
+        late = max(timeOfDay - self.get_deadline(), 0)
+        return self.get_late_benefit(late)
     # Feel free to add more helper functions here
