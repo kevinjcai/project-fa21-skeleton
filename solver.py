@@ -100,6 +100,7 @@ def random_neighbour(seq, tasks, fraction=1):
     idOrder.append(secondmax.get_task_id())
     profit += secondmax.get_Profit(duration)
     availTasks.remove(secondmax)
+    duration += secondmax.get_duration()
     # while task != None:
     #     i = rn.randint(len(availTasks))
     #     if availTasks[i].get_Profit(duration) > 0:
