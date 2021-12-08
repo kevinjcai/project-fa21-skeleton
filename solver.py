@@ -41,7 +41,7 @@ def solve(tasks):
         if sol[3][i] > bestSeq:
             bestIndex = i
             bestSeq =  sol[3][i]
-    # print(sol[2][bestIndex])
+    # print(sol[2][bestIndex][0])
     return sol[2][bestIndex][0]
     pass
 
@@ -85,16 +85,30 @@ def random_neighbour(seq, tasks, fraction=1):
         availTasks.remove(task)
         duration += task.get_duration()
     
-    task = None
-    while task != None:
-        i = rn.randint(len(availTasks))
-        if availTasks[i].get_Profit(duration) > 0:
-            task = availTasks[i]
-            iglooOrder.append(task)
-            idOrder.append(task.get_task_id())
-            profit += task.get_Profit(duration)
-            availTasks.remove(task)
-            duration += task.get_duration()
+#Source https://www.geeksforgeeks.org/python-program-to-find-second-largest-number-in-a-list/
+    mx = max([availTasks[0], availTasks[1]], key = lambda x : x.get_Profit(duration))
+    secondmax = min([availTasks[0], availTasks[1]], key = lambda x : x.get_Profit(duration))
+    n = len(availTasks)
+    for i in range(2, n):
+        if availTasks[i].get_Profit(duration) > mx.get_Profit(duration):
+            secondmax = mx
+            mx = availTasks[i]
+        elif availTasks[i].get_Profit(duration) > secondmax.get_Profit(duration) and mx != availTasks[i]:
+            secondmax = availTasks[i]
+
+    iglooOrder.append(secondmax)
+    idOrder.append(secondmax.get_task_id())
+    profit += secondmax.get_Profit(duration)
+    availTasks.remove(secondmax)
+    # while task != None:
+    #     i = rn.randint(len(availTasks))
+    #     if availTasks[i].get_Profit(duration) > 0:
+    #         task = availTasks[i]
+    #         iglooOrder.append(task)
+    #         idOrder.append(task.get_task_id())
+    #         profit += task.get_Profit(duration)
+    #         availTasks.remove(task)
+    #         duration += task.get_duration()
     counter = 0
     while duration < 1440 and availTasks != []:
         if counter != 0:
@@ -131,9 +145,9 @@ def temperature(fraction):
 if __name__ == '__main__':
     counter = 0
     for size in os.listdir('inputs/'):
-        if size not in ['small']:
+        # if size not in ['small']:
 
-        # if size not in ['small', 'medium', 'large']:
+        if size not in ['small', 'medium', 'large']:
             continue
         for input_file in os.listdir('inputs/{}/'.format(size)):
             if counter == 1:
